@@ -14,7 +14,7 @@ model Meetup {
   id          Int      @id @default(autoincrement())
   name        String
   description String
-  tags        String
+  tags        String[]
   place       String
   date        DateTime
 }

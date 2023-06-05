@@ -1,13 +1,16 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   HttpStatus,
+  Param,
   Patch,
   Post,
 } from '@nestjs/common';
 import { MeetupsService } from './meetups.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CreateMeetupDto } from '@app/src/meetups/dto/create.meetup.dto';
 
 @ApiTags('Meetups')
 @Controller('meetups')
@@ -16,23 +19,33 @@ export class MeetupsController {
 
   @Get()
   @ApiOperation({ summary: 'Get all meetups' })
-  getAllMeetups() {}
+  getAllMeetups() {
+    return this.meetupsService.getAllMeetups();
+  }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get meetup by id' })
-  getMeetupById() {}
+  getMeetupById(@Param('id') id: number) {
+    return this.meetupsService.getMeetupById(id);
+  }
 
   @Post('createmeetup')
   @ApiOperation({ summary: 'Create a meetup' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
-  createAMeetup() {}
+  createAMeetup(@Body() dto: CreateMeetupDto) {
+    return this.meetupsService.createAMeetup(dto);
+  }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Change meetup parameters by id' })
-  changeInfoInMeetup() {}
+  changeInfoInMeetup(@Param('id') id: number, @Body() body: any) {
+    return this.meetupsService.changeInfoInMeetup(id, body);
+  }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete meetup by id' })
-  deleteMeetupById() {}
+  deleteMeetupById(@Param('id') id: number) {
+    return this.meetupsService.deleteMeetupById(id);
+  }
 }
