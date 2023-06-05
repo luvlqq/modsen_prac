@@ -1,0 +1,72 @@
+{
+	"info": {
+		"_postman_id": "b81995d4-fa06-430c-9a99-84b47fa64cd2",
+		"name": "modsen",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "24182499"
+	},
+	"item": [
+		{
+			"name": "createAMeetup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Meetup Name\",\n  \"description\": \"Meetup Description\",\n  \"tags\": [\"tag1\", \"tag2\", \"tag3\"],\n  \"place\": \"Meetup Place\",\n  \"date\": \"2023-06-01T10:00:00Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/meetups/createmeetup"
+			},
+			"response": []
+		},
+		{
+			"name": "getAllMeetups",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3000/api/meetups/"
+			},
+			"response": []
+		},
+		{
+			"name": "deleteAMeetup",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "http://localhost:3000/api/meetups/1"
+			},
+			"response": []
+		},
+		{
+			"name": "changeInfoInMeetup",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"newName\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/meetups/2"
+			},
+			"response": []
+		},
+		{
+			"name": "getMeetupById",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
