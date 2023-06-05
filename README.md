@@ -1,1 +1,0 @@
-# modsen_prac
