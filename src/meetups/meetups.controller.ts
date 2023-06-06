@@ -11,6 +11,7 @@ import {
 import { MeetupsService } from './meetups.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateMeetupDto } from '@app/src/meetups/dto/create.meetup.dto';
+import { UpdateMeetupDto } from '@app/src/meetups/dto/update.meetup.dto';
 
 @ApiTags('Meetups')
 @Controller('meetups')
@@ -39,8 +40,8 @@ export class MeetupsController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Change meetup parameters by id' })
-  changeInfoInMeetup(@Param('id') id: number, @Body() body: any) {
-    return this.meetupsService.changeInfoInMeetup(id, body);
+  changeInfoInMeetup(@Param('id') id: number, @Body() dto: UpdateMeetupDto) {
+    return this.meetupsService.changeInfoInMeetup(id, dto);
   }
 
   @Delete(':id')

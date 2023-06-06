@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { CreateMeetupDto } from '@app/src/meetups/dto/create.meetup.dto';
+import { UpdateMeetupDto } from '@app/src/meetups/dto/update.meetup.dto';
 
 @Injectable()
 export class MeetupsService {
@@ -27,7 +28,7 @@ export class MeetupsService {
     return this.prisma.meetup.delete({ where: { id } });
   }
 
-  async changeInfoInMeetup(id, body: any) {
-    return this.prisma.meetup.update({ where: { id }, data: body });
+  async changeInfoInMeetup(id, dto: UpdateMeetupDto) {
+    return this.prisma.meetup.update({ where: { id }, data: dto });
   }
 }
