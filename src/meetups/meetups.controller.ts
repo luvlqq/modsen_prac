@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { MeetupsService } from './meetups.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -22,8 +23,8 @@ export class MeetupsController {
   @ApiOperation({ summary: 'Get all meetups' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
-  getAllMeetups() {
-    return this.meetupsService.getAllMeetups();
+  getAllMeetups(@Query('name') name: string) {
+    return this.meetupsService.getAllMeetups(name);
   }
 
   @Get(':id')

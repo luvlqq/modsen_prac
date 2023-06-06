@@ -11,8 +11,17 @@ export class MeetupsService {
     return this.prisma.meetup.create({ data: dto });
   }
 
-  async getAllMeetups() {
-    return this.prisma.meetup.findMany();
+  async getAllMeetups(name: string) {
+    const query = this.prisma.meetup.findMany({
+      where: {
+        name: { contains: name },
+      },
+      orderBy: {
+        date: 'asc',
+      },
+    });
+
+    return query;
   }
 
   async getMeetupById(id: number) {
