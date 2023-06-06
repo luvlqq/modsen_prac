@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Meetup" ALTER COLUMN "date" DROP DEFAULT;
