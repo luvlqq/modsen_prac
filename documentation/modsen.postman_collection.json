@@ -13,14 +13,14 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"name\": \"Meetup Name\",\n  \"description\": \"Meetup Description\",\n  \"tags\": [\"tag1\", \"tag2\", \"tag3\"],\n  \"place\": \"Meetup Place\",\n  \"date\": \"2023-06-01T10:00:00Z\"\n}",
+					"raw": "{\n  \"name\": \"test meet\",\n  \"description\": \"Meetup Description\",\n  \"tags\": [\"tag1\", \"tag2\", \"tag3\"],\n  \"place\": \"Meetup Place\",\n  \"date\": \"2023-06-01T10:00:00Z\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "http://localhost:3000/api/meetups/createmeetup"
+				"url": "http://localhost:3000/api/meetups/createMeetup"
 			},
 			"response": []
 		},
@@ -38,7 +38,7 @@
 			"request": {
 				"method": "DELETE",
 				"header": [],
-				"url": "http://localhost:3000/api/meetups/1"
+				"url": "http://localhost:3000/api/meetups/5"
 			},
 			"response": []
 		},
@@ -49,14 +49,14 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\":\"newName\"\n}",
+					"raw": "{\n    \"name\":\"newName234\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
 						}
 					}
 				},
-				"url": "http://localhost:3000/api/meetups/2"
+				"url": "http://localhost:3000/api/meetups/5"
 			},
 			"response": []
 		},
@@ -64,7 +64,8 @@
 			"name": "getMeetupById",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": "http://localhost:3000/api/meetups/3"
 			},
 			"response": []
 		}
