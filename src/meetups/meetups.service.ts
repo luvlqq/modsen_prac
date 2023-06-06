@@ -8,8 +8,7 @@ export class MeetupsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async createAMeetup(dto: CreateMeetupDto) {
-    await this.prisma.meetup.create({ data: dto });
-    return { message: 'meetup was successfully created' };
+    return this.prisma.meetup.create({ data: dto });
   }
 
   async getAllMeetups() {
@@ -17,18 +16,24 @@ export class MeetupsService {
   }
 
   async getMeetupById(id: number) {
-    const meetup = await this.prisma.meetup.findUnique({ where: { id } });
-    if (!meetup) {
-      throw new BadRequestException('No event with this id');
-    }
-    return meetup;
+    return this.findMeetupById(id);
   }
 
   async deleteMeetupById(id: number) {
+    const meetup = await this.findMeetupById(id);
     return this.prisma.meetup.delete({ where: { id } });
   }
 
-  async changeInfoInMeetup(id, dto: UpdateMeetupDto) {
+  async changeInfoInMeetup(id: number, dto: UpdateMeetupDto) {
+    const meetup = await this.findMeetupById(id);
     return this.prisma.meetup.update({ where: { id }, data: dto });
+  }
+
+  async findMeetupById(id: number) {
+    const meetup = await this.prisma.meetup.findUnique({ where: { id } });
+    if (!meetup) {
+      throw new BadRequestException('No meetup with this id');
+    }
+    return meetup;
   }
 }
