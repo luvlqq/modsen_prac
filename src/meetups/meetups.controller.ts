@@ -49,6 +49,7 @@ export class MeetupsController {
   @ApiOperation({ summary: 'Create a meetup' })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
@@ -64,6 +65,7 @@ export class MeetupsController {
   @ApiOperation({ summary: 'Change meetup parameters by id' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
@@ -80,6 +82,7 @@ export class MeetupsController {
   @ApiOperation({ summary: 'Delete meetup by id' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',

@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { CreateMeetupDto } from '@app/src/meetups/dto/create.meetup.dto';
 import { UpdateMeetupDto } from '@app/src/meetups/dto/update.meetup.dto';
