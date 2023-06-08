@@ -96,7 +96,7 @@ export class AuthService {
         },
         {
           secret: process.env.RTSECRET,
-          expiresIn: 60 * 60 * 24 * 7,
+          expiresIn: null,
         },
       ),
     ]);
