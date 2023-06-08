@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthDto } from '@app/src/auth/dto/auth.dto';
 import { Tokens } from '@app/src/auth/types/tokens';
 import { GetCurrentUserId } from '@app/src/common/decorators/get.current.userId.decorator';
@@ -15,6 +15,8 @@ export class AuthController {
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Register user account' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
   register(@Body() dto: AuthDto): Promise<Tokens> {
     return this.authService.register(dto);
   }
@@ -23,6 +25,12 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Log in as a user to your account' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Incorrect data',
+  })
   login(@Body() dto: AuthDto): Promise<Tokens> {
     return this.authService.login(dto);
   }
@@ -30,6 +38,11 @@ export class AuthController {
   @Post('signOut')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Sign out from account' })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Incorrect data',
+  })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   signOut(@GetCurrentUserId() userId: number) {
     return this.authService.signOut(userId);
   }

@@ -7,6 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       Int      @id @default(autoincrement())
+  login    String   @unique
+  password String
+  role     UserRole @default(USER)
+  hashRt   String?
+}
+
 model Meetup {
   id          Int      @id @default(autoincrement())
   name        String
@@ -14,14 +22,6 @@ model Meetup {
   place       String
   date        DateTime
   tags        String[]
-}
-
-model User {
-  id       Int      @id @default(autoincrement())
-  login    String   @unique
-  password String
-  role     UserRole @default(USER)
-  hashRt   String?
 }
 
 enum UserRole {
