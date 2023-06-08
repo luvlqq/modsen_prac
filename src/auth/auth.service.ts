@@ -1,13 +1,24 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from '@app/prisma/prisma.service';
 import { AuthDto } from '@app/src/auth/dto/auth.dto';
 import * as bcrypt from 'bcrypt';
+import { Tokens } from '@app/src/auth/types/tokens';
+import { JwtService } from '@nestjs/jwt';
+import * as process from 'process';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  async register(dto: AuthDto) {
+  async register(dto: AuthDto): Promise<Tokens> {
     const foundUser = await this.prisma.user.findUnique({
       where: { login: dto.login },
     });
@@ -16,15 +27,85 @@ export class AuthService {
       throw new BadRequestException('User with this login is already exist');
     }
 
-    const hashedPassword = await this.hashPassword(dto.password);
+    const hashedPassword = await this.hashData(dto.password);
 
-    return this.prisma.user.create({
+    const newUser = await this.prisma.user.create({
       data: { login: dto.login, password: hashedPassword },
     });
+
+    const tokens = await this.signTokens(newUser.id, newUser.login);
+    await this.updateRtHash(newUser.id, tokens.refreshToken);
+    return tokens;
   }
 
-  async hashPassword(password: string) {
+  async login(dto: AuthDto): Promise<Tokens> {
+    const user = await this.prisma.user.findUnique({
+      where: { login: dto.login },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User are not exist!');
+    }
+
+    const passwordMatches = await bcrypt.compare(dto.password, user.password);
+
+    if (!passwordMatches) {
+      throw new UnauthorizedException('Access denied! Incorrect password!');
+    }
+    const tokens = await this.signTokens(user.id, user.login);
+    await this.updateRtHash(user.id, tokens.refreshToken);
+    return tokens;
+  }
+
+  async signOut() {}
+
+  async refreshTokens() {}
+
+  async hashData(data: string) {
     const saltOrRounds = 10;
-    return await bcrypt.hash(password, saltOrRounds);
+    return await bcrypt.hash(data, saltOrRounds);
+  }
+
+  async signTokens(userId: number, login: string): Promise<Tokens> {
+    const [at, rt] = await Promise.all([
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          login,
+        },
+        {
+          secret: process.env.ATSECRET,
+          expiresIn: 60 * 15,
+        },
+      ),
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          login,
+        },
+        {
+          secret: process.env.RTSECRET,
+          expiresIn: 60 * 60 * 24 * 7,
+        },
+      ),
+    ]);
+
+    return {
+      accessToken: at,
+      refreshToken: rt,
+    };
+  }
+
+  async updateRtHash(userId: number, rt: string) {
+    const hash = await this.hashData(rt);
+    console.log(hash);
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        hashRt: hash,
+      },
+    });
   }
 }
