@@ -57,9 +57,20 @@ export class AuthService {
     return tokens;
   }
 
-  async signOut() {}
-
-  async refreshTokens() {}
+  async signOut(userId: number): Promise<boolean> {
+    await this.prisma.user.updateMany({
+      where: {
+        id: userId,
+        hashRt: {
+          not: null,
+        },
+      },
+      data: {
+        hashRt: null,
+      },
+    });
+    return true;
+  }
 
   async hashData(data: string) {
     const saltOrRounds = 10;
@@ -98,7 +109,6 @@ export class AuthService {
 
   async updateRtHash(userId: number, rt: string) {
     const hash = await this.hashData(rt);
-    console.log(hash);
     await this.prisma.user.update({
       where: {
         id: userId,
