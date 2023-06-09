@@ -1,6 +1,11 @@
 import { Controller, Get, HttpStatus, Param, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GetCurrentUserId } from '@app/src/common/decorators/get.current.userId.decorator';
 
 @ApiTags('Users')
@@ -8,11 +13,8 @@ import { GetCurrentUserId } from '@app/src/common/decorators/get.current.userId.
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get user meetup' })
-  getUserMeetups() {}
-
   @Get()
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get user info by token' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
@@ -25,6 +27,7 @@ export class UsersController {
   }
 
   @Post('subscribe/:meetupId')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Subscribe to meetup' })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Created' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
