@@ -37,27 +37,6 @@ export class MeetupsService {
     return this.prisma.meetup.findMany(query);
   }
 
-  async getAllMeetups1(dto: GetMeetupDto): Promise<Meetup[]> {
-    const where: Prisma.MeetupWhereInput = {
-      name: { contains: dto.name || undefined },
-      date: {
-        gte: dto.from ? new Date(dto.from) : undefined,
-        lte: dto.to ? new Date(dto.to) : undefined,
-      },
-    };
-
-    const query: Prisma.MeetupFindManyArgs = {
-      where,
-      orderBy: {
-        date: dto.sort || undefined,
-      },
-      take: dto.limit,
-      skip: dto.page,
-    };
-
-    return this.prisma.meetup.findMany(query);
-  }
-
   async getMeetupById(id: number): Promise<Meetup> {
     return this.findMeetupById(id);
   }
