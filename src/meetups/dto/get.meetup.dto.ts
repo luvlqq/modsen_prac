@@ -24,4 +24,17 @@ export class GetMeetupDto {
   @IsOptional()
   @IsEnum(['asc', 'desc'])
   sort?: 'asc' | 'desc';
+
+  @ApiProperty({
+    description: 'Page size',
+    required: false,
+    minimum: 1,
+    default: 10,
+  })
+  @IsOptional()
+  limit?: number = 10;
+
+  @ApiProperty({ description: 'Page number', nullable: true })
+  @IsOptional()
+  page?: number;
 }
