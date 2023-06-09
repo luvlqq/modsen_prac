@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetCurrentUserId } from '@app/src/common/decorators/get.current.userId.decorator';
@@ -22,5 +22,20 @@ export class UsersController {
   })
   getUserInfo(@GetCurrentUserId() userId: number) {
     return this.usersService.getUserInfo(userId);
+  }
+
+  @Post('subscribe/:meetupId')
+  @ApiOperation({ summary: 'Subscribe to meetup' })
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'Created' })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized',
+  })
+  async subscribeToMeetup(
+    @GetCurrentUserId() userId: number,
+    @Param('meetupId') meetupId: number,
+  ) {
+    return this.usersService.subscribeToMeetup(userId, meetupId);
   }
 }

@@ -8,20 +8,25 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  login    String   @unique
-  password String
-  role     UserRole @default(USER)
-  hashRt   String?
+  id            Int      @id @default(autoincrement())
+  login         String   @unique
+  password      String
+  role          UserRole @default(USER)
+  hashRt        String?
+  meetupsCreate Meetup[] @relation("MeetupCreator")
+  meetupsFollow Meetup[] @relation("MeetupFollower")
 }
 
 model Meetup {
-  id          Int      @id @default(autoincrement())
-  name        String
-  description String
-  place       String
-  date        DateTime
-  tags        String[]
+  id              Int      @id @default(autoincrement())
+  name            String
+  description     String
+  place           String
+  date            DateTime
+  tags            String[]
+  meetupOwner     User?    @relation("MeetupCreator", fields: [meetupCreator], references: [id])
+  meetupCreator   Int?
+  meetupFollowers User[]   @relation("MeetupFollower")
 }
 
 enum UserRole {

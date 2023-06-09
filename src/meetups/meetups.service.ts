@@ -10,7 +10,9 @@ export class MeetupsService {
 
   async createAMeetup(userId: number, dto: CreateMeetupDto): Promise<Meetup> {
     await this.getUserRole(userId);
-    return this.prisma.meetup.create({ data: dto });
+    return this.prisma.meetup.create({
+      data: { ...dto, meetupCreator: userId },
+    });
   }
 
   async getAllMeetups(name?: string): Promise<Meetup[]> {

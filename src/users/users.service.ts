@@ -8,4 +8,13 @@ export class UsersService {
   getUserInfo(id: number) {
     return this.prisma.user.findUnique({ where: { id } });
   }
+
+  async subscribeToMeetup(userId: number, meetupId: number) {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        meetupsFollow: { connect: { id: meetupId } },
+      },
+    });
+  }
 }
