@@ -2,72 +2,349 @@
 	"info": {
 		"_postman_id": "b81995d4-fa06-430c-9a99-84b47fa64cd2",
 		"name": "modsen",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "24182499"
 	},
 	"item": [
 		{
-			"name": "createAMeetup",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"name\": \"test meet\",\n  \"description\": \"Meetup Description\",\n  \"tags\": [\"tag1\", \"tag2\", \"tag3\"],\n  \"place\": \"Meetup Place\",\n  \"date\": \"2023-06-01T10:00:00Z\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "meetups",
+			"item": [
+				{
+					"name": "createAMeetup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImxvZ2luIjoieWFkamRpdmEzMzMzIiwiaWF0IjoxNjg2MzE1NjMxLCJleHAiOjE2ODYzMTY1MzF9._nwy4MkB9FuxQ2YeOrVRa5VdBMjfYmWg-72oEhR5HSs",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Ka4elyaq\",\n  \"description\": \"Meetup Description\",\n  \"tags\": [\"tag1\", \"tag2\", \"tag3\"],\n  \"place\": \"Meetup Place\",\n  \"date\": \"2023-06-11T10:00:00Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/meetups/createMeetup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"meetups",
+								"createMeetup"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": "http://localhost:3000/api/meetups/createMeetup"
-			},
-			"response": []
-		},
-		{
-			"name": "getAllMeetups",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "http://localhost:3000/api/meetups/"
-			},
-			"response": []
-		},
-		{
-			"name": "deleteAMeetup",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": "http://localhost:3000/api/meetups/5"
-			},
-			"response": []
-		},
-		{
-			"name": "changeInfoInMeetup",
-			"request": {
-				"method": "PATCH",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\":\"newName234\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "getAllMeetups",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImxvZ2luIjoieWFkamRpdmEzMzMzIiwiaWF0IjoxNjg2MzE1NjMxLCJleHAiOjE2ODYzMTY1MzF9._nwy4MkB9FuxQ2YeOrVRa5VdBMjfYmWg-72oEhR5HSs",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/meetups?name=&from=2023-06-02T10:00:00.000Z&to=2023-06-11T10:00:00.000Z&sort=desc&limit=3&page=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"meetups"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": ""
+								},
+								{
+									"key": "from",
+									"value": "2023-06-02T10:00:00.000Z"
+								},
+								{
+									"key": "to",
+									"value": "2023-06-11T10:00:00.000Z"
+								},
+								{
+									"key": "sort",
+									"value": "desc"
+								},
+								{
+									"key": "limit",
+									"value": "3"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": "http://localhost:3000/api/meetups/5"
-			},
-			"response": []
+				{
+					"name": "deleteAMeetup",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImxvZ2luIjoieWFkamRpdmEzMzMzIiwiaWF0IjoxNjg2MzE1NjMxLCJleHAiOjE2ODYzMTY1MzF9._nwy4MkB9FuxQ2YeOrVRa5VdBMjfYmWg-72oEhR5HSs",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/meetups/14",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"meetups",
+								"14"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMeetupById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImxvZ2luIjoieWFkamRpdmEzMzMzIiwiaWF0IjoxNjg2MzE1NjMxLCJleHAiOjE2ODYzMTY1MzF9._nwy4MkB9FuxQ2YeOrVRa5VdBMjfYmWg-72oEhR5HSs",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/meetups/14",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"meetups",
+								"14"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "changeInfoInMeetup",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImxvZ2luIjoieWFkamRpdmEzMzMzIiwiaWF0IjoxNjg2MzE1NjMxLCJleHAiOjE2ODYzMTY1MzF9._nwy4MkB9FuxQ2YeOrVRa5VdBMjfYmWg-72oEhR5HSs",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"newName34\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/meetups/14",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"meetups",
+								"14"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "getMeetupById",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": "http://localhost:3000/api/meetups/3"
-			},
-			"response": []
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\":\"yadjdiva3333\",\n    \"password\":\"Qwerty123!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImxvZ2luIjoieWFkamRpdmEzMzMiLCJpYXQiOjE2ODYyOTg2ODAsImV4cCI6MTY4NjI5OTU4MH0.wNNfNqjoViwFdl-7w9gh0sF8Bg690yxA4xkmOlscEnc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\":\"yadjdiva3333\",\n    \"password\":\"Qwerty123!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signOut",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEwLCJsb2dpbiI6InlhZGpkaXZhMzMiLCJpYXQiOjE2ODYyMzM1MjAsImV4cCI6MTY4NjIzNDQyMH0.x3BKJqiAw2hO9XvKwxbz3lowpUo_rOWpbyBdSpq5bSA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/auth/signOut",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"signOut"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "showUserInfo",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImxvZ2luIjoieWFkamRpdmEzMzMzIiwiaWF0IjoxNjg2MzE1NjMxLCJleHAiOjE2ODYzMTY1MzF9._nwy4MkB9FuxQ2YeOrVRa5VdBMjfYmWg-72oEhR5HSs",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "subscribeToMeetup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsImxvZ2luIjoieWFkamRpdmEzMzMzIiwiaWF0IjoxNjg2MzE1NjMxLCJleHAiOjE2ODYzMTY1MzF9._nwy4MkB9FuxQ2YeOrVRa5VdBMjfYmWg-72oEhR5HSs",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/users/subscribe/14",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users",
+								"subscribe",
+								"14"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
