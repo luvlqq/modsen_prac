@@ -1,5 +1,5 @@
 import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
-import { PrismaService } from '@app/prisma/prisma.service';
+import { PrismaService } from '@app/src/modules/prisma/prisma.service';
 import { CreateMeetupDto } from '@app/src/modules/meetups/dto/create.meetup.dto';
 import { UpdateMeetupDto } from '@app/src/modules/meetups/dto/update.meetup.dto';
 import { Meetup, Prisma } from '@prisma/client';
