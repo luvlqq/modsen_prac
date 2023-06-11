@@ -9,7 +9,7 @@ import { AuthDto } from '@app/src/modules/auth/dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { Tokens } from '@app/src/modules/auth/types/tokens';
 import { JwtService } from '@nestjs/jwt';
-import * as process from 'process';
+import config from '@app/src/config/config';
 
 @Injectable()
 export class AuthService {
@@ -85,8 +85,8 @@ export class AuthService {
           login,
         },
         {
-          secret: process.env.ATSECRET,
-          expiresIn: 60 * 15,
+          secret: config.jwt.accessTokenSecret,
+          expiresIn: config.jwt.accessTokenExpiresIn,
         },
       ),
       this.jwtService.signAsync(
@@ -95,8 +95,8 @@ export class AuthService {
           login,
         },
         {
-          secret: process.env.RTSECRET,
-          expiresIn: '999d',
+          secret: config.jwt.refreshTokenSecret,
+          expiresIn: config.jwt.refreshTokenExpiresIn,
         },
       ),
     ]);
