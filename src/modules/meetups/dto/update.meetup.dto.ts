@@ -1,5 +1,6 @@
 import { IsArray, IsDateString, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class UpdateMeetupDto {
   @ApiProperty({ description: 'Meetup name', nullable: true })
@@ -22,6 +23,7 @@ export class UpdateMeetupDto {
   @IsString()
   place: string;
 
+  @Type(() => Date)
   @ApiProperty({ description: 'Meetup date', nullable: true })
   @IsOptional()
   @IsDateString()
