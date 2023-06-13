@@ -8,7 +8,7 @@ export class UsersService {
   getUserInfo(id: number) {
     return this.prisma.user.findUnique({
       where: { id },
-      include: { meetupsFollow: true, meetupsCreate: true },
+      include: { followedMeetups: true, createdMeetups: true },
     });
   }
 
@@ -16,7 +16,7 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id: userId },
       data: {
-        meetupsFollow: { connect: { id: meetupId } },
+        followedMeetups: { connect: { id: meetupId } },
       },
     });
   }
