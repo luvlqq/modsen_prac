@@ -5,4 +5,7 @@ export default {
     accessTokenExpiresIn: 60 * 15,
     refreshTokenExpiresIn: '999d',
   },
+  application: {
+    port: 3000,
+  },
 };

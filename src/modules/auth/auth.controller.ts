@@ -1,10 +1,10 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthDto } from '@app/src/modules/auth/dto/auth.dto';
-import { Tokens } from '@app/src/modules/auth/types/tokens';
-import { GetCurrentUserId } from '@app/src/common/decorators/get.current.userId.decorator';
-import { Public } from '../../common/decorators/public.decorator';
+import { AuthDto } from './dto';
+import { Tokens } from './types';
+import { GetCurrentUserId } from '../../common/decorators';
+import { Public } from '../../common/decorators';
 
 @ApiTags('Auth')
 @Controller('auth')

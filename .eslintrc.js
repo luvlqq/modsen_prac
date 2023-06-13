@@ -5,10 +5,10 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin'],
+  plugins: ['@darraghor/nestjs-typed'],
   extends: [
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
+    'plugin:@darraghor/nestjs-typed/recommended',
+    'plugin:@darraghor/nestjs-typed/no-swagger'
   ],
   root: true,
   env: {
@@ -21,5 +21,6 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@darraghor/nestjs-typed/api-property-returning-array-should-set-array' : 'off',
   },
 };

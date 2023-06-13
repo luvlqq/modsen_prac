@@ -8,13 +8,13 @@ datasource db {
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  login         String   @unique
-  password      String
-  role          UserRole @default(USER)
-  hashRt        String?
-  meetupsCreate Meetup[] @relation("MeetupCreator")
-  meetupsFollow Meetup[] @relation("MeetupFollower")
+  id              Int      @id @default(autoincrement())
+  login           String   @unique
+  password        String
+  role            UserRole @default(USER)
+  hashRt          String?
+  createdMeetups  Meetup[] @relation("MeetupCreator")
+  followedMeetups Meetup[] @relation("MeetupFollower")
 }
 
 model Meetup {
