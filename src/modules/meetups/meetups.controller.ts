@@ -16,11 +16,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateMeetupDto } from '@app/src/modules/meetups/dto/create.meetup.dto';
-import { UpdateMeetupDto } from '@app/src/modules/meetups/dto/update.meetup.dto';
+import { CreateMeetupDto, UpdateMeetupDto, GetMeetupDto } from './dto';
 import { Meetup } from '@prisma/client';
-import { GetCurrentUserId } from '@app/src/common/decorators/get.current.userId.decorator';
-import { GetMeetupDto } from '@app/src/modules/meetups/dto/get.meetup.dto';
+import { GetCurrentUserId } from '../../common/decorators';
 
 @ApiTags('Meetups')
 @Controller('meetups')
