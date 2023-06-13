@@ -1,4 +1,4 @@
-import { IsArray, IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsDate, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
@@ -26,6 +26,6 @@ export class CreateMeetupDto {
   @Type(() => Date)
   @ApiProperty({ description: 'Meetup date', nullable: false })
   @IsNotEmpty()
-  @IsDateString()
+  @IsDate()
   date: Date;
 }
