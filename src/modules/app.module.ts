@@ -11,6 +11,7 @@ import { AtGuard } from '@app/src/common/guards/at.guard';
   imports: [AuthModule, MeetupsModule, UsersModule, PrismaModule],
   providers: [
     PrismaService,
+    AtGuard,
     {
       provide: APP_GUARD,
       useClass: AtGuard,
