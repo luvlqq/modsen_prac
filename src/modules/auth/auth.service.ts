@@ -72,6 +72,20 @@ export class AuthService {
     return true;
   }
 
+  async refreshTokens(userId: number, rt: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: +userId } });
+    if (!user) {
+      throw new NotFoundException('User are not exist');
+    }
+    const rtMatches = await bcrypt.compare(rt, user.hashRt);
+    if (!rtMatches) {
+      throw new BadRequestException('Tokens are not the same!');
+    }
+    const tokens = await this.signTokens(user.id, user.login);
+    await this.updateRtHash(user.id, tokens.refreshToken);
+    return tokens;
+  }
+
   async hashData(data: string) {
     const saltOrRounds = 10;
     return await bcrypt.hash(data, saltOrRounds);

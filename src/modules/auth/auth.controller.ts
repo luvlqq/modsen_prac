@@ -1,10 +1,18 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthDto } from './dto';
 import { Tokens } from './types';
-import { GetCurrentUserId } from '../../common/decorators';
+import { GetCurrentUser, GetCurrentUserId } from '../../common/decorators';
 import { Public } from '../../common/decorators';
+import { RtGuard } from '@app/src/common/guards';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -45,5 +53,22 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   signOut(@GetCurrentUserId() userId: number) {
     return this.authService.signOut(userId);
+  }
+
+  @Public()
+  @UseGuards(RtGuard)
+  @Post('refresh')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Refresh token' })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Incorrect data',
+  })
+  @ApiResponse({ status: HttpStatus.CREATED, description: 'Success' })
+  refreshTokens(
+    @GetCurrentUserId() userId: number,
+    @GetCurrentUser('refreshToken') refreshToken: string,
+  ) {
+    return this.authService.refreshTokens(userId, refreshToken);
   }
 }
