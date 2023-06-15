@@ -4,20 +4,19 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { PrismaService } from '@app/src/modules/prisma/prisma.service';
 import { AuthDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
-import config from '@app/src/config/config';
 import { AuthRepository } from './auth.repository';
+import { JwtTokensService } from './jwt.tokens.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly repository: AuthRepository,
+    private readonly jwtTokenService: JwtTokensService,
   ) {}
 
   public async register(dto: AuthDto): Promise<Tokens> {
@@ -73,39 +72,13 @@ export class AuthService {
     return tokens;
   }
 
-  public async hashData(data: string) {
+  public async hashData(data: string): Promise<string> {
     const saltOrRounds = 10;
     return await bcrypt.hash(data, saltOrRounds);
   }
 
   public async signTokens(userId: number, login: string): Promise<Tokens> {
-    const [at, rt] = await Promise.all([
-      this.jwtService.signAsync(
-        {
-          sub: userId,
-          login,
-        },
-        {
-          secret: config.jwt.accessTokenSecret,
-          expiresIn: config.jwt.accessTokenExpiresIn,
-        },
-      ),
-      this.jwtService.signAsync(
-        {
-          sub: userId,
-          login,
-        },
-        {
-          secret: config.jwt.refreshTokenSecret,
-          expiresIn: config.jwt.refreshTokenExpiresIn,
-        },
-      ),
-    ]);
-
-    return {
-      accessToken: at,
-      refreshToken: rt,
-    };
+    return this.jwtTokenService.signToken(userId, login);
   }
 
   public async updateRtHash(userId: number, rt: string) {
