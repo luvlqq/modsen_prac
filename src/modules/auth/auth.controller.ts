@@ -25,7 +25,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Register user account' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
-  register(@Body() dto: AuthDto): Promise<Tokens> {
+  public async register(@Body() dto: AuthDto): Promise<Tokens> {
     return this.authService.register(dto);
   }
 
@@ -39,7 +39,7 @@ export class AuthController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Incorrect data',
   })
-  login(@Body() dto: AuthDto): Promise<Tokens> {
+  public async login(@Body() dto: AuthDto): Promise<Tokens> {
     return this.authService.login(dto);
   }
 
@@ -51,7 +51,7 @@ export class AuthController {
     description: 'Incorrect data',
   })
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
-  signOut(@GetCurrentUserId() userId: number) {
+  public async signOut(@GetCurrentUserId() userId: number) {
     return this.authService.signOut(userId);
   }
 
@@ -65,7 +65,7 @@ export class AuthController {
     description: 'Incorrect data',
   })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Success' })
-  refreshTokens(
+  public async refreshTokens(
     @GetCurrentUserId() userId: number,
     @GetCurrentUser('refreshToken') refreshToken: string,
   ) {

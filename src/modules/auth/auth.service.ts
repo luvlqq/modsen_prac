@@ -10,18 +10,18 @@ import * as bcrypt from 'bcrypt';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 import config from '@app/src/config/config';
+import { AuthRepository } from './auth.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
+    private readonly repository: AuthRepository,
   ) {}
 
-  async register(dto: AuthDto): Promise<Tokens> {
-    const foundUser = await this.prisma.user.findUnique({
-      where: { login: dto.login },
-    });
+  public async register(dto: AuthDto): Promise<Tokens> {
+    const foundUser = await this.repository.foundUser(dto);
 
     if (foundUser) {
       throw new BadRequestException('User with this login is already exist');
@@ -29,19 +29,15 @@ export class AuthService {
 
     const hashedPassword = await this.hashData(dto.password);
 
-    const newUser = await this.prisma.user.create({
-      data: { login: dto.login, password: hashedPassword },
-    });
+    const newUser = await this.repository.createNewUser(dto, hashedPassword);
 
     const tokens = await this.signTokens(newUser.id, newUser.login);
     await this.updateRtHash(newUser.id, tokens.refreshToken);
     return tokens;
   }
 
-  async login(dto: AuthDto): Promise<Tokens> {
-    const user = await this.prisma.user.findUnique({
-      where: { login: dto.login },
-    });
+  public async login(dto: AuthDto): Promise<Tokens> {
+    const user = await this.repository.foundUser(dto);
 
     if (!user) {
       throw new NotFoundException('User are not exist!');
@@ -54,26 +50,17 @@ export class AuthService {
     }
     const tokens = await this.signTokens(user.id, user.login);
     await this.updateRtHash(user.id, tokens.refreshToken);
+    // res.cookie('Token', tokens, { secure: true, httpOnly: true });
+
     return tokens;
   }
 
-  async signOut(userId: number): Promise<boolean> {
-    await this.prisma.user.updateMany({
-      where: {
-        id: userId,
-        hashRt: {
-          not: null,
-        },
-      },
-      data: {
-        hashRt: null,
-      },
-    });
-    return true;
+  public async signOut(userId: number): Promise<boolean> {
+    return this.repository.signOut(userId);
   }
 
-  async refreshTokens(userId: number, rt: string) {
-    const user = await this.prisma.user.findUnique({ where: { id: +userId } });
+  public async refreshTokens(userId: number, rt: string) {
+    const user = await this.repository.foundUserById(userId);
     if (!user) {
       throw new NotFoundException('User are not exist');
     }
@@ -86,12 +73,12 @@ export class AuthService {
     return tokens;
   }
 
-  async hashData(data: string) {
+  public async hashData(data: string) {
     const saltOrRounds = 10;
     return await bcrypt.hash(data, saltOrRounds);
   }
 
-  async signTokens(userId: number, login: string): Promise<Tokens> {
+  public async signTokens(userId: number, login: string): Promise<Tokens> {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
         {
@@ -121,15 +108,8 @@ export class AuthService {
     };
   }
 
-  async updateRtHash(userId: number, rt: string) {
+  public async updateRtHash(userId: number, rt: string) {
     const hash = await this.hashData(rt);
-    await this.prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        hashRt: hash,
-      },
-    });
+    await this.repository.updateRtHash(userId, hash);
   }
 }
