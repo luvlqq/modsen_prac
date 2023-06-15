@@ -7,6 +7,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { GetCurrentUserId } from '../../common/decorators';
+import { UserResponse } from '@app/src/modules/users/response/user.response';
 
 @ApiTags('Users')
 @Controller('users')
