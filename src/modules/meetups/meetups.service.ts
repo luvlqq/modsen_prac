@@ -34,7 +34,7 @@ export class MeetupsService {
     id: number,
   ): Promise<MeetupResponse> {
     await this.getUserRole(userId);
-    const meetup = await this.findMeetupById(+id);
+    await this.findMeetupById(+id);
     await this.compareUserIdAndMeetupId(userId, id);
     return this.repository.deleteMeetupById(userId, id);
   }
@@ -46,7 +46,7 @@ export class MeetupsService {
   ): Promise<MeetupResponse> {
     await this.getUserRole(userId);
     await this.compareUserIdAndMeetupId(userId, id);
-    const meetup = await this.findMeetupById(id);
+    await this.findMeetupById(id);
     return this.repository.changeInfoInMeetup(userId, id, dto);
   }
 
