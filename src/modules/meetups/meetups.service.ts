@@ -1,61 +1,45 @@
 import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
-import { PrismaService } from '@app/src/modules/prisma/prisma.service';
+import { PrismaService } from './../prisma/prisma.service';
 import { CreateMeetupDto, UpdateMeetupDto, GetMeetupDto } from './dto';
-import { Prisma } from '@prisma/client';
 import { Logger } from 'nestjs-pino';
 import { MeetupResponse } from './response/meetup.response';
+import { MeetupsRepository } from './meetups.repository';
 
 @Injectable()
 export class MeetupsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly logger: Logger,
+    private readonly repository: MeetupsRepository,
   ) {}
 
-  async createAMeetup(
+  public async createAMeetup(
     userId: number,
     dto: CreateMeetupDto,
   ): Promise<MeetupResponse> {
     await this.getUserRole(userId);
-    await this.logger.log('Create log', userId, dto);
-    return this.prisma.meetup.create({
-      data: { ...dto, meetupCreator: userId },
-    });
+    return this.repository.createAMeetup(userId, dto);
   }
 
-  async getAllMeetups(dto: GetMeetupDto): Promise<MeetupResponse[]> {
-    const where: Prisma.MeetupWhereInput = {
-      name: { contains: dto.name || undefined },
-      date: {
-        gte: dto.from ? new Date(dto.from) : undefined,
-        lte: dto.to ? new Date(dto.to) : undefined,
-      },
-    };
-
-    const query: Prisma.MeetupFindManyArgs = {
-      where,
-      orderBy: {
-        date: dto.sort || undefined,
-      },
-      take: +dto.limit || 1,
-      skip: (dto.page - 1) * dto.limit || undefined,
-    };
-
-    return this.prisma.meetup.findMany(query);
+  public async getAllMeetups(dto: GetMeetupDto): Promise<MeetupResponse[]> {
+    return this.repository.getAllMeetups(dto);
   }
 
-  async getMeetupById(id: number): Promise<MeetupResponse> {
+  public async getMeetupById(id: number): Promise<MeetupResponse> {
     return this.findMeetupById(id);
   }
 
-  async deleteMeetupById(userId: number, id: number): Promise<MeetupResponse> {
+  public async deleteMeetupById(
+    userId: number,
+    id: number,
+  ): Promise<MeetupResponse> {
     await this.getUserRole(userId);
     const meetup = await this.findMeetupById(+id);
     await this.compareUserIdAndMeetupId(userId, id);
-    return this.prisma.meetup.delete({ where: { id: +id } });
+    return this.repository.deleteMeetupById(userId, id);
   }
 
-  async changeInfoInMeetup(
+  public async changeInfoInMeetup(
     userId: number,
     id: number,
     dto: UpdateMeetupDto,
@@ -63,30 +47,26 @@ export class MeetupsService {
     await this.getUserRole(userId);
     await this.compareUserIdAndMeetupId(userId, id);
     const meetup = await this.findMeetupById(id);
-    return this.prisma.meetup.update({ where: { id: +id }, data: dto });
+    return this.repository.changeInfoInMeetup(userId, id, dto);
   }
 
-  async findMeetupById(id: number): Promise<MeetupResponse> {
-    const meetup = await this.prisma.meetup.findUnique({ where: { id: +id } });
+  public async findMeetupById(id: number): Promise<MeetupResponse> {
+    const meetup = await this.repository.getMeetupById(id);
     if (!meetup) {
       throw new BadRequestException('No meetup with this id');
     }
     return meetup;
   }
 
-  async getUserRole(userId: number) {
-    const userRole = await this.prisma.user.findUnique({
-      where: { id: userId },
-    });
+  public async getUserRole(userId: number) {
+    const userRole = await this.repository.getUserRole(userId);
     if (userRole.role != 'ADMIN') {
       throw new HttpException('Access denied', 403);
     }
   }
 
-  async compareUserIdAndMeetupId(userId: number, id: number) {
-    const meetupOwner = await this.prisma.meetup.findUnique({
-      where: { id: +id },
-    });
+  public async compareUserIdAndMeetupId(userId: number, id: number) {
+    const meetupOwner = await this.repository.getMeetupOwnerId(id);
     if (userId != meetupOwner.meetupCreator) {
       throw new HttpException('Access denied!', 403);
     }
