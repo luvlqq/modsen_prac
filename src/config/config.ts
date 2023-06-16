@@ -1,3 +1,5 @@
+import * as process from 'process';
+
 export default {
   jwt: {
     accessTokenSecret: process.env.ATSECRET,
@@ -6,6 +8,6 @@ export default {
     refreshTokenExpiresIn: '999d',
   },
   application: {
-    port: 3000,
+    port: process.env.PORT,
   },
 };
