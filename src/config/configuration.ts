@@ -1,6 +1,6 @@
 import * as process from 'process';
 
-export default {
+export default () => ({
   jwt: {
     accessTokenSecret: process.env.ATSECRET,
     refreshTokenSecret: process.env.RTSECRET,
@@ -8,6 +8,6 @@ export default {
     refreshTokenExpiresIn: '999d',
   },
   application: {
-    port: process.env.PORT,
+    port: parseInt(process.env.PORT, 10),
   },
-};
+});
