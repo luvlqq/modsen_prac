@@ -19,7 +19,7 @@ export class JwtTokensService {
         },
         {
           secret: this.configService.get<string>('ATSECRET'),
-          expiresIn: this.configService.get<number>('ATEXPIREIN'),
+          expiresIn: this.configService.get<string>('ATEXPIREIN'),
         },
       ),
       this.jwtService.signAsync(
