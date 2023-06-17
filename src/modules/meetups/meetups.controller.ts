@@ -19,15 +19,11 @@ import {
 import { CreateMeetupDto, UpdateMeetupDto, GetMeetupDto } from './dto';
 import { GetCurrentUserId } from '../../common/decorators';
 import { MeetupResponse } from './response/meetup.response';
-import { PinoService } from '@app/src/modules/pino/pino.service';
 
 @ApiTags('Meetups')
 @Controller('meetups')
 export class MeetupsController {
-  constructor(
-    private readonly meetupsService: MeetupsService,
-    private readonly pino: PinoService,
-  ) {}
+  constructor(private readonly meetupsService: MeetupsService) {}
 
   @Get()
   @ApiBearerAuth()
@@ -38,8 +34,7 @@ export class MeetupsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  getAllMeetups(@Query() dto: GetMeetupDto): Promise<MeetupResponse[]> {
-    this.pino.logMeetupsShow();
+  getAllMeetups(@Query() dto: GetMeetupDto) {
     return this.meetupsService.getAllMeetups(dto);
   }
 
@@ -53,7 +48,6 @@ export class MeetupsController {
     description: 'Unauthorized',
   })
   getMeetupById(@Param('id') id: number): Promise<MeetupResponse> {
-    this.pino.logMeetupsShow();
     return this.meetupsService.getMeetupById(id);
   }
 
@@ -71,7 +65,6 @@ export class MeetupsController {
     @GetCurrentUserId() userId: number,
     @Body() dto: CreateMeetupDto,
   ): Promise<MeetupResponse> {
-    this.pino.logMeetupsCreate();
     return this.meetupsService.createAMeetup(userId, dto);
   }
 
@@ -89,8 +82,7 @@ export class MeetupsController {
     @GetCurrentUserId() userId: number,
     @Param('id') id: number,
     @Body() dto: UpdateMeetupDto,
-  ): Promise<MeetupResponse> {
-    this.pino.logMeetupsUpdate();
+  ) {
     return this.meetupsService.changeInfoInMeetup(userId, id, dto);
   }
 
@@ -108,7 +100,6 @@ export class MeetupsController {
     @GetCurrentUserId() userId: number,
     @Param('id') id: number,
   ): Promise<MeetupResponse> {
-    this.pino.logMeetupsDelete();
     return this.meetupsService.deleteMeetupById(userId, id);
   }
 }
