@@ -9,14 +9,15 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './modules/app.module';
 import * as cookieParser from 'cookie-parser';
-import config from './config/config';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api');
-  app.use(cookieParser());
+  const configService = app.get(ConfigService);
 
+  app.use(cookieParser());
   const swagger = new DocumentBuilder()
     .setTitle('Meetup API')
     .setDescription('The meetup API description')
@@ -24,6 +25,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, swagger);
   SwaggerModule.setup('doc', app, document);
-  await app.listen(config.application.port);
+  await app.listen(configService.get<number>('PORT'));
 }
 bootstrap();
