@@ -6,25 +6,21 @@ if (!process.env.IS_TS_NODE) {
 
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './modules/app.module';
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
+import { setupSwagger } from '@app/src/common/initialization/initialization.swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api');
+  app.use(cookieParser());
+
   const configService = app.get(ConfigService);
 
-  app.use(cookieParser());
-  const swagger = new DocumentBuilder()
-    .setTitle('Meetup API')
-    .setDescription('The meetup API description')
-    .setVersion('1.0')
-    .build();
-  const document = SwaggerModule.createDocument(app, swagger);
-  SwaggerModule.setup('doc', app, document);
+  setupSwagger(app);
+
   await app.listen(configService.get<number>('PORT'));
 }
 bootstrap();
