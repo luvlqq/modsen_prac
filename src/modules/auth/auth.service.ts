@@ -58,7 +58,7 @@ export class AuthService {
     return this.repository.signOut(userId);
   }
 
-  public async refreshTokens(userId: number, rt: string) {
+  public async refreshTokens(userId: number, rt: string): Promise<Tokens> {
     const user = await this.repository.foundUserById(userId);
     if (!user) {
       throw new NotFoundException('User are not exist');
