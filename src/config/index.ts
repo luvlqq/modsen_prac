@@ -1,1 +1,1 @@
-export * from '@app/src/config/config';
+export * from '@app/src/config/configuration';

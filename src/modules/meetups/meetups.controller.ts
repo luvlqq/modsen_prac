@@ -19,15 +19,11 @@ import {
 import { CreateMeetupDto, UpdateMeetupDto, GetMeetupDto } from './dto';
 import { GetCurrentUserId } from '../../common/decorators';
 import { MeetupResponse } from './response/meetup.response';
-import { PinoService } from '@app/src/modules/pino/pino.service';
 
 @ApiTags('Meetups')
 @Controller('meetups')
 export class MeetupsController {
-  constructor(
-    private readonly meetupsService: MeetupsService,
-    private readonly pino: PinoService,
-  ) {}
+  constructor(private readonly meetupsService: MeetupsService) {}
 
   @Get()
   @ApiBearerAuth()
@@ -38,8 +34,7 @@ export class MeetupsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  getAllMeetups(@Query() dto: GetMeetupDto): Promise<MeetupResponse[]> {
-    this.pino.logMeetupsShow();
+  public async getAllMeetups(@Query() dto: GetMeetupDto) {
     return this.meetupsService.getAllMeetups(dto);
   }
 
@@ -52,8 +47,9 @@ export class MeetupsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  getMeetupById(@Param('id') id: number): Promise<MeetupResponse> {
-    this.pino.logMeetupsShow();
+  public async getMeetupById(
+    @Param('id') id: number,
+  ): Promise<MeetupResponse | string> {
     return this.meetupsService.getMeetupById(id);
   }
 
@@ -67,11 +63,10 @@ export class MeetupsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  createAMeetup(
+  public async createAMeetup(
     @GetCurrentUserId() userId: number,
     @Body() dto: CreateMeetupDto,
-  ): Promise<MeetupResponse> {
-    this.pino.logMeetupsCreate();
+  ): Promise<MeetupResponse | string> {
     return this.meetupsService.createAMeetup(userId, dto);
   }
 
@@ -85,12 +80,11 @@ export class MeetupsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  changeInfoInMeetup(
+  public async changeInfoInMeetup(
     @GetCurrentUserId() userId: number,
     @Param('id') id: number,
     @Body() dto: UpdateMeetupDto,
-  ): Promise<MeetupResponse> {
-    this.pino.logMeetupsUpdate();
+  ): Promise<MeetupResponse | string> {
     return this.meetupsService.changeInfoInMeetup(userId, id, dto);
   }
 
@@ -104,11 +98,10 @@ export class MeetupsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  deleteMeetupById(
+  public async deleteMeetupById(
     @GetCurrentUserId() userId: number,
     @Param('id') id: number,
-  ): Promise<MeetupResponse> {
-    this.pino.logMeetupsDelete();
+  ): Promise<MeetupResponse | string> {
     return this.meetupsService.deleteMeetupById(userId, id);
   }
 }
