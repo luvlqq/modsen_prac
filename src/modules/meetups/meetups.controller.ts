@@ -34,7 +34,7 @@ export class MeetupsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  getAllMeetups(@Query() dto: GetMeetupDto) {
+  public async getAllMeetups(@Query() dto: GetMeetupDto) {
     return this.meetupsService.getAllMeetups(dto);
   }
 
@@ -47,7 +47,9 @@ export class MeetupsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  getMeetupById(@Param('id') id: number): Promise<MeetupResponse> {
+  public async getMeetupById(
+    @Param('id') id: number,
+  ): Promise<MeetupResponse | string> {
     return this.meetupsService.getMeetupById(id);
   }
 
@@ -61,10 +63,10 @@ export class MeetupsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  createAMeetup(
+  public async createAMeetup(
     @GetCurrentUserId() userId: number,
     @Body() dto: CreateMeetupDto,
-  ): Promise<MeetupResponse> {
+  ): Promise<MeetupResponse | string> {
     return this.meetupsService.createAMeetup(userId, dto);
   }
 
@@ -78,11 +80,11 @@ export class MeetupsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  changeInfoInMeetup(
+  public async changeInfoInMeetup(
     @GetCurrentUserId() userId: number,
     @Param('id') id: number,
     @Body() dto: UpdateMeetupDto,
-  ) {
+  ): Promise<MeetupResponse | string> {
     return this.meetupsService.changeInfoInMeetup(userId, id, dto);
   }
 
@@ -96,10 +98,10 @@ export class MeetupsController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  deleteMeetupById(
+  public async deleteMeetupById(
     @GetCurrentUserId() userId: number,
     @Param('id') id: number,
-  ): Promise<MeetupResponse> {
+  ): Promise<MeetupResponse | string> {
     return this.meetupsService.deleteMeetupById(userId, id);
   }
 }

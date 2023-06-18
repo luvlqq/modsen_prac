@@ -20,7 +20,7 @@ export class MeetupsService {
   public async createAMeetup(
     userId: number,
     dto: CreateMeetupDto,
-  ): Promise<MeetupResponse> {
+  ): Promise<MeetupResponse | string> {
     try {
       await this.getUserRole(userId);
       const result = await this.repository.createAMeetup(userId, dto);
@@ -32,7 +32,9 @@ export class MeetupsService {
     }
   }
 
-  public async getAllMeetups(dto: GetMeetupDto) {
+  public async getAllMeetups(
+    dto: GetMeetupDto,
+  ): Promise<MeetupResponse[] | string> {
     try {
       const result = await this.repository.getAllMeetups(dto);
       this.logger.log('Show all meetups');
@@ -43,7 +45,7 @@ export class MeetupsService {
     }
   }
 
-  public async getMeetupById(id: number): Promise<MeetupResponse> {
+  public async getMeetupById(id: number): Promise<MeetupResponse | string> {
     try {
       const result = await this.findMeetupById(id);
       this.logger.log(`Get meetup by id. Id: ${id}`);
@@ -57,7 +59,7 @@ export class MeetupsService {
   public async deleteMeetupById(
     userId: number,
     id: number,
-  ): Promise<MeetupResponse> {
+  ): Promise<MeetupResponse | string> {
     try {
       await this.getUserRole(userId);
       await this.findMeetupById(+id);
@@ -75,7 +77,7 @@ export class MeetupsService {
     userId: number,
     id: number,
     dto: UpdateMeetupDto,
-  ) {
+  ): Promise<MeetupResponse | string> {
     try {
       await this.getUserRole(userId);
       await this.compareUserIdAndMeetupId(userId, id);
