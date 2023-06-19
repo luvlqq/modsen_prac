@@ -15,6 +15,7 @@ import { JwtTokensService } from './jwt.tokens.service';
     RtStrategy,
     AuthRepository,
     JwtTokensService,
+    // JwtStrategy,
   ],
 })
 export class AuthModule {}

@@ -10,6 +10,7 @@ import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { AuthRepository } from './auth.repository';
 import { JwtTokensService } from './jwt.tokens.service';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,7 @@ export class AuthService {
     private readonly jwtTokenService: JwtTokensService,
   ) {}
 
-  public async register(dto: AuthDto): Promise<Tokens> {
+  public async register(dto: AuthDto, res: Response) {
     const foundUser = await this.repository.foundUser(dto);
 
     if (foundUser) {
@@ -32,10 +33,10 @@ export class AuthService {
 
     const tokens = await this.signTokens(newUser.id, newUser.login);
     await this.updateRtHash(newUser.id, tokens.refreshToken);
-    return tokens;
+    await this.putTokensToCookies(newUser.id, newUser.login, res);
   }
 
-  public async login(dto: AuthDto): Promise<Tokens> {
+  public async login(dto: AuthDto, res: Response) {
     const user = await this.repository.foundUser(dto);
 
     if (!user) {
@@ -49,16 +50,16 @@ export class AuthService {
     }
     const tokens = await this.signTokens(user.id, user.login);
     await this.updateRtHash(user.id, tokens.refreshToken);
-    // res.cookie('Token', tokens, { secure: true, httpOnly: true });
-
-    return tokens;
+    await this.putTokensToCookies(user.id, user.login, res);
   }
 
-  public async signOut(userId: number): Promise<boolean> {
-    return this.repository.signOut(userId);
+  public async signOut(userId: number, res: Response) {
+    await this.repository.signOut(userId);
+    await res.clearCookie('accessToken');
+    await res.clearCookie('refreshToken');
   }
 
-  public async refreshTokens(userId: number, rt: string): Promise<Tokens> {
+  public async refreshTokens(userId: number, rt: string, res: Response) {
     const user = await this.repository.foundUserById(userId);
     if (!user) {
       throw new NotFoundException('User are not exist');
@@ -69,7 +70,32 @@ export class AuthService {
     }
     const tokens = await this.signTokens(user.id, user.login);
     await this.updateRtHash(user.id, tokens.refreshToken);
-    return tokens;
+    await this.putTokensToCookies(user.id, user.login, res);
+  }
+
+  public async accessTokenCookie(res: Response, accessToken: string) {
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: true,
+    });
+  }
+
+  public async refreshTokenCookie(res: Response, refreshToken: string) {
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
+  }
+
+  public async putTokensToCookies(
+    userId: number,
+    login: string,
+    res: Response,
+  ) {
+    const tokens = await this.jwtTokenService.signToken(userId, login);
+    await this.refreshTokens(userId, tokens.refreshToken, res);
+    await this.accessTokenCookie(res, tokens.accessToken);
+    await this.refreshTokenCookie(res, tokens.refreshToken);
   }
 
   public async hashData(data: string): Promise<string> {

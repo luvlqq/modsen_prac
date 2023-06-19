@@ -4,15 +4,16 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthDto } from './dto';
-import { Tokens } from './types';
 import { GetCurrentUser, GetCurrentUserId } from '../../common/decorators';
 import { Public } from '../../common/decorators';
 import { RtGuard } from '@app/src/common/guards';
+import { Response } from 'express';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -21,17 +22,20 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(204)
   @ApiOperation({ summary: 'Register user account' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
-  public async register(@Body() dto: AuthDto): Promise<Tokens> {
-    return this.authService.register(dto);
+  public async register(
+    @Body() dto: AuthDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.register(dto, res);
   }
 
   @Public()
   @Post('login')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(204)
   @ApiOperation({ summary: 'Log in as a user to your account' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
@@ -39,8 +43,11 @@ export class AuthController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Incorrect data',
   })
-  public async login(@Body() dto: AuthDto): Promise<Tokens> {
-    return this.authService.login(dto);
+  public async login(
+    @Body() dto: AuthDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.login(dto, res);
   }
 
   @Post('signOut')
@@ -51,8 +58,11 @@ export class AuthController {
     description: 'Incorrect data',
   })
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
-  public async signOut(@GetCurrentUserId() userId: number) {
-    return this.authService.signOut(userId);
+  public async signOut(
+    @GetCurrentUserId() userId: number,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.signOut(userId, res);
   }
 
   @Public()
@@ -68,7 +78,8 @@ export class AuthController {
   public async refreshTokens(
     @GetCurrentUserId() userId: number,
     @GetCurrentUser('refreshToken') refreshToken: string,
+    @Res({ passthrough: true }) res: Response,
   ) {
-    return this.authService.refreshTokens(userId, refreshToken);
+    return this.authService.refreshTokens(userId, refreshToken, res);
   }
 }
