@@ -78,8 +78,7 @@ export class AuthController {
   public async refreshTokens(
     @GetCurrentUserId() userId: number,
     @GetCurrentUser('refreshToken') refreshToken: string,
-    @Res({ passthrough: true }) res: Response,
   ) {
-    return this.authService.refreshTokens(userId, refreshToken, res);
+    return this.authService.refreshTokens(userId, refreshToken);
   }
 }

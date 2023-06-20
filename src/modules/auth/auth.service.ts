@@ -59,7 +59,7 @@ export class AuthService {
     await res.clearCookie('refreshToken');
   }
 
-  public async refreshTokens(userId: number, rt: string, res: Response) {
+  public async refreshTokens(userId: number, rt: string) {
     const user = await this.repository.foundUserById(userId);
     if (!user) {
       throw new NotFoundException('User are not exist');
@@ -70,7 +70,7 @@ export class AuthService {
     }
     const tokens = await this.signTokens(user.id, user.login);
     await this.updateRtHash(user.id, tokens.refreshToken);
-    await this.putTokensToCookies(user.id, user.login, res);
+    // await this.putTokensToCookies(user.id, user.login, res);
   }
 
   public async accessTokenCookie(res: Response, accessToken: string) {
@@ -90,12 +90,12 @@ export class AuthService {
   public async putTokensToCookies(
     userId: number,
     login: string,
-    res: Response,
+    res?: Response,
   ) {
     const tokens = await this.jwtTokenService.signToken(userId, login);
-    await this.refreshTokens(userId, tokens.refreshToken, res);
     await this.accessTokenCookie(res, tokens.accessToken);
     await this.refreshTokenCookie(res, tokens.refreshToken);
+    await this.refreshTokens(userId, tokens.refreshToken);
   }
 
   public async hashData(data: string): Promise<string> {
