@@ -3,7 +3,9 @@ import {
   forwardRef,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
+  OnApplicationShutdown,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthDto } from './dto';
@@ -14,10 +16,14 @@ import { JwtTokensService } from './jwt.tokens.service';
 import { Response } from 'express';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnApplicationShutdown {
+  onApplicationShutdown() {
+    this.logger.log('Auth shutdown');
+  }
   constructor(
     private readonly jwtService: JwtService,
     private readonly repository: AuthRepository,
+    private readonly logger: Logger,
     @Inject(forwardRef(() => JwtTokensService))
     private readonly jwtTokenService: JwtTokensService,
   ) {}
