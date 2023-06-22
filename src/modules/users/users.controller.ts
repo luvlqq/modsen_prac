@@ -7,6 +7,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { GetCurrentUserId } from '../../common/decorators';
+import { MeetupResponse } from '../meetups/response';
+import { UserResponse } from './response';
 
 @ApiTags('Users')
 @Controller('users')
@@ -22,7 +24,7 @@ export class UsersController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
   })
-  getUserInfo(@GetCurrentUserId() userId: number) {
+  getUserInfo(@GetCurrentUserId() userId: number): Promise<UserResponse> {
     return this.usersService.getUserInfo(userId);
   }
 
@@ -38,7 +40,7 @@ export class UsersController {
   async subscribeToMeetup(
     @GetCurrentUserId() userId: number,
     @Param('meetupId') meetupId: number,
-  ) {
+  ): Promise<MeetupResponse> {
     return this.usersService.subscribeToMeetup(userId, meetupId);
   }
 }

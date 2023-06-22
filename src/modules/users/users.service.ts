@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@app/src/modules/prisma/prisma.service';
 import { UsersRepository } from './users.repository';
+import { UserResponse } from './response';
+import { MeetupResponse } from '../meetups/response';
 
 @Injectable()
 export class UsersService {
@@ -9,11 +11,14 @@ export class UsersService {
     private readonly repository: UsersRepository,
   ) {}
 
-  async getUserInfo(id: number) {
+  async getUserInfo(id: number): Promise<UserResponse> {
     return this.repository.getUserInfo(id);
   }
 
-  async subscribeToMeetup(userId: number, meetupId: number) {
+  async subscribeToMeetup(
+    userId: number,
+    meetupId: number,
+  ): Promise<MeetupResponse> {
     return this.repository.subscribeToMeetup(userId, meetupId);
   }
 }
