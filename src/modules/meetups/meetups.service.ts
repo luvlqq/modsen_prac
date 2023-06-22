@@ -3,7 +3,6 @@ import {
   HttpException,
   Injectable,
   Logger,
-  OnApplicationShutdown,
 } from '@nestjs/common';
 import { PrismaService } from './../prisma/prisma.service';
 import { CreateMeetupDto, UpdateMeetupDto, GetMeetupDto } from './dto';
@@ -11,11 +10,7 @@ import { MeetupResponse } from './response/meetup.response';
 import { MeetupsRepository } from './meetups.repository';
 
 @Injectable()
-export class MeetupsService implements OnApplicationShutdown {
-  onApplicationShutdown() {
-    this.logger.log('Meetup Shutdown');
-  }
-
+export class MeetupsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly repository: MeetupsRepository,
