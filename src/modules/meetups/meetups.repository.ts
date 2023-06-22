@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './../prisma/prisma.service';
 import { CreateMeetupDto, GetMeetupDto, UpdateMeetupDto } from './dto';
-import { Prisma } from '@prisma/client';
+import { Meetup, Prisma, User } from '@prisma/client';
 import { MeetupResponse } from './response/meetup.response';
 
 @Injectable()
@@ -57,13 +57,13 @@ export class MeetupsRepository {
     return this.prisma.meetup.update({ where: { id: +id }, data: dto });
   }
 
-  public async getUserRole(userId: number) {
+  public async getUserRole(userId: number): Promise<User> {
     return this.prisma.user.findUnique({
       where: { id: userId },
     });
   }
 
-  public async getMeetupOwnerId(id: number) {
+  public async getMeetupOwnerId(id: number): Promise<Meetup> {
     return this.prisma.meetup.findUnique({
       where: { id: +id },
     });

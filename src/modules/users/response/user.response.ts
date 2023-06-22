@@ -1,11 +1,19 @@
-import { MeetupResponse } from '@app/src/modules/meetups/response/meetup.response';
+export class Meetup {
+  id: number;
+  name: string;
+  description: string;
+  place: string;
+  date: Date;
+  tags: string[];
+  meetupCreator: number;
+}
 
-export class UserResponse extends MeetupResponse {
+export class UserResponse {
   id: number;
   login: string;
   password: string;
   role: string;
   hashRt: string;
-  followedMeetups: MeetupResponse[];
-  createdMeetups: MeetupResponse[];
+  followedMeetups: Meetup[];
+  createdMeetups: Meetup[];
 }

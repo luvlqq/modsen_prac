@@ -99,14 +99,17 @@ export class MeetupsService {
     return meetup;
   }
 
-  public async getUserRole(userId: number) {
+  public async getUserRole(userId: number): Promise<void> {
     const userRole = await this.repository.getUserRole(userId);
     if (userRole.role != 'ADMIN') {
       throw new HttpException('Access denied', 403);
     }
   }
 
-  public async compareUserIdAndMeetupId(userId: number, id: number) {
+  public async compareUserIdAndMeetupId(
+    userId: number,
+    id: number,
+  ): Promise<void> {
     const meetupOwner = await this.repository.getMeetupOwnerId(id);
     if (userId != meetupOwner.meetupCreator) {
       throw new HttpException('Access denied!', 403);

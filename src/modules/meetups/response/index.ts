@@ -1,1 +1,1 @@
-export * from '@app/src/modules/meetups/response';
+export * from '@app/src/modules/meetups/response/meetup.response';

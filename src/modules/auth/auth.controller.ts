@@ -29,7 +29,7 @@ export class AuthController {
   public async register(
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<void> {
     return this.authService.register(dto, res);
   }
 
@@ -46,7 +46,7 @@ export class AuthController {
   public async login(
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<void> {
     return this.authService.login(dto, res);
   }
 
@@ -61,7 +61,7 @@ export class AuthController {
   public async signOut(
     @GetCurrentUserId() userId: number,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<void> {
     return this.authService.signOut(userId, res);
   }
 
@@ -78,7 +78,7 @@ export class AuthController {
   public async refreshTokens(
     @GetCurrentUserId() userId: number,
     @GetCurrentUser('refreshToken') refreshToken: string,
-  ) {
+  ): Promise<void> {
     return this.authService.refreshTokens(userId, refreshToken);
   }
 }
