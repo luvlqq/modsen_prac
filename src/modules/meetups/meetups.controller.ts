@@ -17,7 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateMeetupDto, UpdateMeetupDto, GetMeetupDto } from './dto';
-import { GetCurrentUserId } from '../../common/decorators';
+import { GetCurrentUserId } from '../auth/decorators';
 import { MeetupResponse } from './response/meetup.response';
 
 @ApiTags('Meetups')

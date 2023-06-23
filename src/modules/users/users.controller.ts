@@ -6,7 +6,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { GetCurrentUserId } from '../../common/decorators';
+import { GetCurrentUserId } from '../auth/decorators';
 import { MeetupResponse } from '../meetups/response';
 import { UserResponse } from './response';
 

@@ -5,7 +5,7 @@ import { UsersModule } from './users/users.module';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { APP_GUARD } from '@nestjs/core';
-import { AtGuard } from '../common/guards';
+import { AtGuard } from './auth/guards';
 import { ConfigModule } from '@nestjs/config';
 import configuration from '../config/configuration';
 

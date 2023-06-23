@@ -25,9 +25,9 @@ export class AuthService {
   ) {}
 
   public async register(dto: AuthDto, res: Response): Promise<void> {
-    const foundUser = await this.repository.foundUser(dto);
+    const findUser = await this.repository.foundUser(dto);
 
-    if (foundUser) {
+    if (findUser) {
       throw new BadRequestException('User with this login is already exist');
     }
 

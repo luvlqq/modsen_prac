@@ -10,9 +10,9 @@ import {
 import { AuthService } from './auth.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthDto } from './dto';
-import { GetCurrentUser, GetCurrentUserId } from '../../common/decorators';
-import { Public } from '../../common/decorators';
-import { RtGuard } from '@app/src/common/guards';
+import { GetCurrentUser, GetCurrentUserId } from './decorators';
+import { Public } from './decorators';
+import { RtGuard } from 'src/modules/auth/guards';
 import { Response } from 'express';
 
 @ApiTags('Auth')
@@ -30,7 +30,7 @@ export class AuthController {
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
-    return this.authService.register(dto, res);
+    await this.authService.register(dto, res);
   }
 
   @Public()
@@ -47,7 +47,7 @@ export class AuthController {
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
-    return this.authService.login(dto, res);
+    await this.authService.login(dto, res);
   }
 
   @Post('signOut')
@@ -79,6 +79,6 @@ export class AuthController {
     @GetCurrentUserId() userId: number,
     @GetCurrentUser('refreshToken') refreshToken: string,
   ): Promise<void> {
-    return this.authService.refreshTokens(userId, refreshToken);
+    await this.authService.refreshTokens(userId, refreshToken);
   }
 }
