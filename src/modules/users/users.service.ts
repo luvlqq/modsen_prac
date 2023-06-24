@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@app/src/modules/prisma/prisma.service';
 import { UsersRepository } from './users.repository';
 import { UserResponse } from './response';
-import { MeetupResponse } from '../meetups/response';
+import { MeetupResponse } from '../meetups/responses';
 
 @Injectable()
 export class UsersService {

@@ -12,13 +12,21 @@ import {
 import { MeetupsService } from './meetups.service';
 import {
   ApiBearerAuth,
+  ApiExtraModels,
   ApiOperation,
   ApiResponse,
   ApiTags,
+  getSchemaPath,
 } from '@nestjs/swagger';
 import { CreateMeetupDto, UpdateMeetupDto, GetMeetupDto } from './dto';
 import { GetCurrentUserId } from '../auth/decorators';
-import { MeetupResponse } from './response/meetup.response';
+import { MeetupResponse } from './responses';
+import {
+  UnauthorizedError,
+  AccessDenied,
+  BadRequestError,
+} from '../../common/swagger/responses';
+import { DtoBadRequest } from '@app/src/common/swagger/responses/dto.bad.request';
 
 @ApiTags('Meetups')
 @Controller('meetups')
@@ -28,24 +36,60 @@ export class MeetupsController {
   @Get()
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all meetups' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Success',
+    isArray: true,
+    schema: {
+      $ref: getSchemaPath(MeetupResponse),
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad Request',
+    type: BadRequestError,
+    schema: {
+      $ref: getSchemaPath(BadRequestError),
+    },
+  })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
+    schema: {
+      $ref: getSchemaPath(UnauthorizedError),
+    },
   })
-  public async getAllMeetups(@Query() dto: GetMeetupDto) {
+  public async getAllMeetups(
+    @Query() dto: GetMeetupDto,
+  ): Promise<MeetupResponse[] | string> {
     return this.meetupsService.getAllMeetups(dto);
   }
 
   @Get(':id')
   @ApiBearerAuth()
+  @ApiExtraModels(MeetupResponse)
   @ApiOperation({ summary: 'Get meetup by id' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Success',
+    schema: {
+      $ref: getSchemaPath(MeetupResponse),
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad Request',
+    schema: {
+      $ref: getSchemaPath(BadRequestError),
+    },
+  })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
+    type: UnauthorizedError,
+    schema: {
+      $ref: getSchemaPath(UnauthorizedError),
+    },
   })
   public async getMeetupById(
     @Param('id') id: number,
@@ -55,13 +99,36 @@ export class MeetupsController {
 
   @Post('createMeetup')
   @ApiBearerAuth()
+  @ApiExtraModels(MeetupResponse)
   @ApiOperation({ summary: 'Create a meetup' })
-  @ApiResponse({ status: HttpStatus.CREATED, description: 'Success' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
-  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'Success',
+    schema: {
+      $ref: getSchemaPath(MeetupResponse),
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad Request',
+    type: DtoBadRequest,
+    schema: {
+      $ref: getSchemaPath(DtoBadRequest),
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Access denied',
+    schema: {
+      $ref: getSchemaPath(AccessDenied),
+    },
+  })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
+    schema: {
+      $ref: getSchemaPath(UnauthorizedError),
+    },
   })
   public async createAMeetup(
     @GetCurrentUserId() userId: number,
@@ -73,12 +140,34 @@ export class MeetupsController {
   @Patch(':id')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Change meetup parameters by id' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
-  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Success',
+    schema: {
+      $ref: getSchemaPath(MeetupResponse),
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad Request',
+    schema: {
+      $ref: getSchemaPath(DtoBadRequest),
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Access denied',
+    type: AccessDenied,
+    schema: {
+      $ref: getSchemaPath(AccessDenied),
+    },
+  })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
+    schema: {
+      $ref: getSchemaPath(UnauthorizedError),
+    },
   })
   public async changeInfoInMeetup(
     @GetCurrentUserId() userId: number,
@@ -91,12 +180,33 @@ export class MeetupsController {
   @Delete(':id')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete meetup by id' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request' })
-  @ApiResponse({ status: 403, description: 'Access denied' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Success',
+    schema: {
+      $ref: getSchemaPath(MeetupResponse),
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad Request',
+    schema: {
+      $ref: getSchemaPath(BadRequestError),
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Access denied',
+    schema: {
+      $ref: getSchemaPath(AccessDenied),
+    },
+  })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: 'Unauthorized',
+    schema: {
+      $ref: getSchemaPath(UnauthorizedError),
+    },
   })
   public async deleteMeetupById(
     @GetCurrentUserId() userId: number,

@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from './../prisma/prisma.service';
 import { CreateMeetupDto, UpdateMeetupDto, GetMeetupDto } from './dto';
-import { MeetupResponse } from './response/meetup.response';
+import { MeetupResponse } from '@app/src/modules/meetups/responses/meetup.response';
 import { MeetupsRepository } from './meetups.repository';
 
 @Injectable()
@@ -51,7 +51,7 @@ export class MeetupsService {
       this.logger.log(`Get meetup by id. Id: ${id}`);
       return result;
     } catch (e) {
-      await this.logger.error(e);
+      this.logger.error(e);
       return e;
     }
   }
