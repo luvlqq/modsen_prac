@@ -66,8 +66,8 @@ export class AuthService {
 
   public async signOut(userId: number, res: Response): Promise<void> {
     await this.repository.signOut(userId);
-    await res.clearCookie('accessToken');
-    await res.clearCookie('refreshToken');
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
   }
 
   public async refreshTokens(userId: number, rt: string): Promise<void> {
