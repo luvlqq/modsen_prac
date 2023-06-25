@@ -15,7 +15,10 @@ import configuration from '../config/configuration';
     MeetupsModule,
     UsersModule,
     PrismaModule,
-    ConfigModule.forRoot({ load: [configuration], isGlobal: true }),
+    ConfigModule.forRoot({
+      load: [configuration],
+      isGlobal: true,
+    }),
   ],
   providers: [
     PrismaService,
