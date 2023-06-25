@@ -25,8 +25,8 @@ import {
   UnauthorizedError,
   AccessDenied,
   BadRequestError,
+  DtoBadRequest,
 } from '../../common/swagger/responses';
-import { DtoBadRequest } from '@app/src/common/swagger/responses/dto.bad.request';
 
 @ApiTags('Meetups')
 @Controller('meetups')
