@@ -8,12 +8,20 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { AuthDto } from './dto';
-import { GetCurrentUser, GetCurrentUserId } from '../../common/decorators';
-import { Public } from '../../common/decorators';
-import { RtGuard } from '@app/src/common/guards';
+import { GetCurrentUser, GetCurrentUserId } from './decorators';
+import { Public } from './decorators';
+import { RtGuard } from 'src/modules/auth/guards';
 import { Response } from 'express';
+import { DtoBadRequest } from '@app/src/common/swagger/responses/dto.bad.request';
+import { DtoUnauthorized } from '@app/src/common/swagger/responses/dto.unauthorized';
+import { UnauthorizedError } from '@app/src/common/swagger/responses';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -24,30 +32,47 @@ export class AuthController {
   @Post('register')
   @HttpCode(204)
   @ApiOperation({ summary: 'Register user account' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
+  @ApiResponse({ status: 204, description: 'Success' })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad request',
+    type: DtoBadRequest,
+    schema: {
+      $ref: getSchemaPath(DtoBadRequest),
+    },
+  })
   public async register(
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
-    return this.authService.register(dto, res);
+    await this.authService.register(dto, res);
   }
 
   @Public()
   @Post('login')
   @HttpCode(204)
   @ApiOperation({ summary: 'Log in as a user to your account' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
-  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad request' })
+  @ApiResponse({ status: 204, description: 'Success' })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Bad request',
+    schema: {
+      $ref: getSchemaPath(DtoBadRequest),
+    },
+  })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Incorrect data',
+    description: 'Unauthorized',
+    type: DtoUnauthorized,
+    schema: {
+      $ref: getSchemaPath(DtoUnauthorized),
+    },
   })
   public async login(
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
-    return this.authService.login(dto, res);
+    await this.authService.login(dto, res);
   }
 
   @Post('signOut')
@@ -55,7 +80,11 @@ export class AuthController {
   @ApiOperation({ summary: 'Sign out from account' })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Incorrect data',
+    description: 'Unauthorized',
+    type: UnauthorizedError,
+    schema: {
+      $ref: getSchemaPath(UnauthorizedError),
+    },
   })
   @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
   public async signOut(
@@ -72,13 +101,16 @@ export class AuthController {
   @ApiOperation({ summary: 'Refresh token' })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Incorrect data',
+    description: 'Unauthorized',
+    schema: {
+      $ref: getSchemaPath(UnauthorizedError),
+    },
   })
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Success' })
   public async refreshTokens(
     @GetCurrentUserId() userId: number,
     @GetCurrentUser('refreshToken') refreshToken: string,
   ): Promise<void> {
-    return this.authService.refreshTokens(userId, refreshToken);
+    await this.authService.refreshTokens(userId, refreshToken);
   }
 }

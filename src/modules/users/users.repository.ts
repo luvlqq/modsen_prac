@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@app/src/modules/prisma/prisma.service';
+import { Meetup } from '@prisma/client';
 
 @Injectable()
 export class UsersRepository {
@@ -12,7 +13,10 @@ export class UsersRepository {
     });
   }
 
-  public async subscribeToMeetup(userId: number, meetupId: number) {
+  public async subscribeToMeetup(
+    userId: number,
+    meetupId: number,
+  ): Promise<Meetup> {
     await this.prisma.user.update({
       where: { id: userId },
       data: {

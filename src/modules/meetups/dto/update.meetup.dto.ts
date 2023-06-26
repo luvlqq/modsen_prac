@@ -1,31 +1,4 @@
-import { IsArray, IsDate, IsOptional, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { PartialType } from '@nestjs/swagger';
+import { CreateMeetupDto } from '@app/src/modules/meetups/dto/create.meetup.dto';
 
-export class UpdateMeetupDto {
-  @ApiProperty({ description: 'Meetup name', nullable: true })
-  @IsOptional()
-  @IsString()
-  name: string;
-
-  @ApiProperty({ description: 'Meetup description', nullable: true })
-  @IsOptional()
-  @IsString()
-  description: string;
-
-  @ApiProperty({ description: 'Meetup tags', nullable: true })
-  @IsOptional()
-  @IsArray()
-  tags: string[];
-
-  @ApiProperty({ description: 'Meetup place', nullable: true })
-  @IsOptional()
-  @IsString()
-  place: string;
-
-  @Type(() => Date)
-  @ApiProperty({ description: 'Meetup date', nullable: true })
-  @IsOptional()
-  @IsDate()
-  date: Date;
-}
+export class UpdateMeetupDto extends PartialType(CreateMeetupDto) {}

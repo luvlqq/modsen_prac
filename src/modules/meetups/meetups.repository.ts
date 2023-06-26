@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from './../prisma/prisma.service';
 import { CreateMeetupDto, GetMeetupDto, UpdateMeetupDto } from './dto';
 import { Meetup, Prisma, User } from '@prisma/client';
-import { MeetupResponse } from './response/meetup.response';
+import { MeetupResponse } from '@app/src/modules/meetups/responses/meetup.response';
 
 @Injectable()
 export class MeetupsRepository {
