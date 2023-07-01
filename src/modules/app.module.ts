@@ -4,10 +4,11 @@ import { MeetupsModule } from './meetups/meetups.module';
 import { UsersModule } from './users/users.module';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { AtGuard } from './auth/guards';
 import { ConfigModule } from '@nestjs/config';
 import configuration from '../config/configuration';
+import { HttpExceptionFilter } from '../common/filter';
 
 @Module({
   imports: [
@@ -26,6 +27,10 @@ import configuration from '../config/configuration';
     {
       provide: APP_GUARD,
       useClass: AtGuard,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
     },
   ],
 })
