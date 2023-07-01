@@ -22,11 +22,15 @@ import { Response } from 'express';
 import { DtoBadRequest } from '@app/src/common/swagger/responses/dto.bad.request';
 import { DtoUnauthorized } from '@app/src/common/swagger/responses/dto.unauthorized';
 import { UnauthorizedError } from '@app/src/common/swagger/responses';
+import { JwtTokensService } from '@app/src/modules/auth/jwt.tokens.service';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly jwtTokenSerice: JwtTokensService,
+  ) {}
 
   @Public()
   @Post('register')
@@ -113,6 +117,6 @@ export class AuthController {
     @GetCurrentUserId() userId: number,
     @GetCurrentUser('refreshToken') refreshToken: string,
   ): Promise<void> {
-    await this.authService.refreshTokens(userId, refreshToken);
+    await this.jwtTokenSerice.refreshTokens(userId, refreshToken);
   }
 }

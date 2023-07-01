@@ -1,7 +1,5 @@
 import {
   BadRequestException,
-  forwardRef,
-  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -21,7 +19,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly repository: AuthRepository,
     private readonly logger: Logger,
-    @Inject(forwardRef(() => JwtTokensService))
     private readonly jwtTokenService: JwtTokensService,
   ) {}
 
@@ -67,19 +64,6 @@ export class AuthService {
 
   public async signOut(userId: number): Promise<void> {
     await this.repository.signOut(userId);
-  }
-
-  public async refreshTokens(userId: number, rt: string): Promise<void> {
-    const user = await this.repository.foundUserById(userId);
-    if (!user) {
-      throw new NotFoundException('User are not exist');
-    }
-    const rtMatches = await bcrypt.compare(rt, user.hashRt);
-    if (!rtMatches) {
-      throw new BadRequestException('Tokens are not the same!');
-    }
-    const tokens = await this.jwtTokenService.signTokens(user.id, user.login);
-    await this.jwtTokenService.updateRtHash(user.id, tokens.refreshToken);
   }
 
   public async hashData(data: string): Promise<string> {
