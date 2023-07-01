@@ -5,6 +5,7 @@ import {
   Get,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -92,7 +93,7 @@ export class MeetupsController {
     },
   })
   public async getMeetupById(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<MeetupResponse | string> {
     return this.meetupsService.getMeetupById(id);
   }
@@ -171,7 +172,7 @@ export class MeetupsController {
   })
   public async changeInfoInMeetup(
     @GetCurrentUserId() userId: number,
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateMeetupDto,
   ): Promise<MeetupResponse | string> {
     return this.meetupsService.changeInfoInMeetup(userId, id, dto);
@@ -210,7 +211,7 @@ export class MeetupsController {
   })
   public async deleteMeetupById(
     @GetCurrentUserId() userId: number,
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<MeetupResponse | string> {
     return this.meetupsService.deleteMeetupById(userId, id);
   }

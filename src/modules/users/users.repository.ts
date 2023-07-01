@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '@app/src/modules/prisma/prisma.service';
 import { Meetup } from '@prisma/client';
 
@@ -17,12 +17,17 @@ export class UsersRepository {
     userId: number,
     meetupId: number,
   ): Promise<Meetup> {
-    await this.prisma.user.update({
-      where: { id: userId },
-      data: {
-        followedMeetups: { connect: { id: +meetupId } },
-      },
-    });
-    return this.prisma.meetup.findUnique({ where: { id: +meetupId } });
+    try {
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          followedMeetups: { connect: { id: meetupId } },
+        },
+      });
+      return this.prisma.meetup.findUnique({ where: { id: meetupId } });
+    } catch (e) {
+      Logger.error(e);
+      return e;
+    }
   }
 }
