@@ -1,5 +1,6 @@
 import * as Joi from 'joi';
 import { AppConfig } from './types';
+import * as process from 'process';
 
 export default (): AppConfig => {
   const schema = Joi.object({

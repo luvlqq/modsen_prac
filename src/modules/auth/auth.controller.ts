@@ -30,7 +30,7 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Register user account' })
   @ApiResponse({ status: 204, description: 'Success' })
   @ApiResponse({
@@ -50,7 +50,7 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Log in as a user to your account' })
   @ApiResponse({ status: 204, description: 'Success' })
   @ApiResponse({

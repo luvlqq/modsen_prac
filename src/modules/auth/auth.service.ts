@@ -13,6 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthRepository } from './auth.repository';
 import { JwtTokensService } from './jwt.tokens.service';
 import { Response } from 'express';
+import { Constants } from '../../common/constants';
 
 @Injectable()
 export class AuthService {
@@ -82,7 +83,7 @@ export class AuthService {
   }
 
   public async hashData(data: string): Promise<string> {
-    const saltOrRounds = 10;
+    const saltOrRounds = Constants.roundOfSalt;
     return await bcrypt.hash(data, saltOrRounds);
   }
 }
