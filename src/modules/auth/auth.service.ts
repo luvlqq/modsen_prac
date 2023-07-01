@@ -64,10 +64,8 @@ export class AuthService {
     await this.jwtTokenService.putTokensToCookies(user.id, user.login, res);
   }
 
-  public async signOut(userId: number, res: Response): Promise<void> {
+  public async signOut(userId: number): Promise<void> {
     await this.repository.signOut(userId);
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
   }
 
   public async refreshTokens(userId: number, rt: string): Promise<void> {

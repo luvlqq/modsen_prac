@@ -91,7 +91,9 @@ export class AuthController {
     @GetCurrentUserId() userId: number,
     @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
-    return this.authService.signOut(userId, res);
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    return this.authService.signOut(userId);
   }
 
   @Public()
