@@ -9,7 +9,7 @@ export class MeetupsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   public async getMeetupById(id: number): Promise<MeetupResponse> {
-    return this.prisma.meetup.findUnique({ where: { id: +id } });
+    return this.prisma.meetup.findUnique({ where: { id: id } });
   }
 
   public async getAllMeetups(dto: GetMeetupDto): Promise<MeetupResponse[]> {
@@ -46,7 +46,7 @@ export class MeetupsRepository {
     userId: number,
     id: number,
   ): Promise<MeetupResponse> {
-    return this.prisma.meetup.delete({ where: { id: +id } });
+    return this.prisma.meetup.delete({ where: { id: id } });
   }
 
   public async changeInfoInMeetup(
@@ -54,7 +54,7 @@ export class MeetupsRepository {
     id: number,
     dto: UpdateMeetupDto,
   ): Promise<MeetupResponse> {
-    return this.prisma.meetup.update({ where: { id: +id }, data: dto });
+    return this.prisma.meetup.update({ where: { id: id }, data: dto });
   }
 
   public async getUserRole(userId: number): Promise<User> {
@@ -65,7 +65,7 @@ export class MeetupsRepository {
 
   public async getMeetupOwnerId(id: number): Promise<Meetup> {
     return this.prisma.meetup.findUnique({
-      where: { id: +id },
+      where: { id: id },
     });
   }
 }

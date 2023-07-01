@@ -1,7 +1,5 @@
 import {
   BadRequestException,
-  forwardRef,
-  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -13,6 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthRepository } from './auth.repository';
 import { JwtTokensService } from './jwt.tokens.service';
 import { Response } from 'express';
+import { Constants } from '../../common/constants';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +19,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly repository: AuthRepository,
     private readonly logger: Logger,
-    @Inject(forwardRef(() => JwtTokensService))
     private readonly jwtTokenService: JwtTokensService,
   ) {}
 
@@ -64,27 +62,12 @@ export class AuthService {
     await this.jwtTokenService.putTokensToCookies(user.id, user.login, res);
   }
 
-  public async signOut(userId: number, res: Response): Promise<void> {
+  public async signOut(userId: number): Promise<void> {
     await this.repository.signOut(userId);
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
-  }
-
-  public async refreshTokens(userId: number, rt: string): Promise<void> {
-    const user = await this.repository.foundUserById(userId);
-    if (!user) {
-      throw new NotFoundException('User are not exist');
-    }
-    const rtMatches = await bcrypt.compare(rt, user.hashRt);
-    if (!rtMatches) {
-      throw new BadRequestException('Tokens are not the same!');
-    }
-    const tokens = await this.jwtTokenService.signTokens(user.id, user.login);
-    await this.jwtTokenService.updateRtHash(user.id, tokens.refreshToken);
   }
 
   public async hashData(data: string): Promise<string> {
-    const saltOrRounds = 10;
+    const saltOrRounds = Constants.roundOfSalt;
     return await bcrypt.hash(data, saltOrRounds);
   }
 }

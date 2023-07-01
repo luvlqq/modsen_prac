@@ -1,4 +1,11 @@
-import { Controller, Get, HttpStatus, Param, Post } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
   ApiBearerAuth,
@@ -75,7 +82,7 @@ export class UsersController {
   })
   async subscribeToMeetup(
     @GetCurrentUserId() userId: number,
-    @Param('meetupId') meetupId: number,
+    @Param('meetupId', ParseIntPipe) meetupId: number,
   ): Promise<MeetupResponse> {
     return this.usersService.subscribeToMeetup(userId, meetupId);
   }

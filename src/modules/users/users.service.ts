@@ -19,6 +19,6 @@ export class UsersService {
     userId: number,
     meetupId: number,
   ): Promise<MeetupResponse> {
-    return this.repository.subscribeToMeetup(userId, meetupId);
+    return await this.repository.subscribeToMeetup(userId, meetupId);
   }
 }

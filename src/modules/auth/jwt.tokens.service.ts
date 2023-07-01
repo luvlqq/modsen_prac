@@ -1,10 +1,15 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { AuthRepository } from './auth.repository';
+import { Constants } from '../../common/constants';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class JwtTokensService {
@@ -12,8 +17,6 @@ export class JwtTokensService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly repository: AuthRepository,
-    @Inject(forwardRef(() => AuthService))
-    private readonly authService: AuthService,
   ) {}
 
   public async signToken(userId: number, login: string): Promise<Tokens> {
@@ -66,6 +69,19 @@ export class JwtTokensService {
     });
   }
 
+  public async refreshTokens(userId: number, rt: string): Promise<void> {
+    const user = await this.repository.foundUserById(userId);
+    if (!user) {
+      throw new NotFoundException('User are not exist');
+    }
+    const rtMatches = await bcrypt.compare(rt, user.hashRt);
+    if (!rtMatches) {
+      throw new BadRequestException('Tokens are not the same!');
+    }
+    const tokens = await this.signTokens(user.id, user.login);
+    await this.updateRtHash(user.id, tokens.refreshToken);
+  }
+
   public async putTokensToCookies(
     userId: number,
     login: string,
@@ -74,7 +90,7 @@ export class JwtTokensService {
     const tokens = await this.signToken(userId, login);
     await this.accessTokenCookie(res, tokens.accessToken);
     await this.refreshTokenCookie(res, tokens.refreshToken);
-    await this.authService.refreshTokens(userId, tokens.refreshToken);
+    await this.refreshTokens(userId, tokens.refreshToken);
   }
 
   public async signTokens(userId: number, login: string): Promise<Tokens> {
@@ -82,7 +98,12 @@ export class JwtTokensService {
   }
 
   public async updateRtHash(userId: number, rt: string): Promise<void> {
-    const hash = await this.authService.hashData(rt);
+    const hash = await this.hashData(rt);
     await this.repository.updateRtHash(userId, hash);
+  }
+
+  public async hashData(data: string): Promise<string> {
+    const saltOrRounds = Constants.roundOfSalt;
+    return await bcrypt.hash(data, saltOrRounds);
   }
 }

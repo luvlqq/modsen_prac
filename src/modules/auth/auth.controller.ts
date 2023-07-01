@@ -22,15 +22,19 @@ import { Response } from 'express';
 import { DtoBadRequest } from '@app/src/common/swagger/responses/dto.bad.request';
 import { DtoUnauthorized } from '@app/src/common/swagger/responses/dto.unauthorized';
 import { UnauthorizedError } from '@app/src/common/swagger/responses';
+import { JwtTokensService } from '@app/src/modules/auth/jwt.tokens.service';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly jwtTokenSerice: JwtTokensService,
+  ) {}
 
   @Public()
   @Post('register')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Register user account' })
   @ApiResponse({ status: 204, description: 'Success' })
   @ApiResponse({
@@ -50,7 +54,7 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Log in as a user to your account' })
   @ApiResponse({ status: 204, description: 'Success' })
   @ApiResponse({
@@ -91,7 +95,9 @@ export class AuthController {
     @GetCurrentUserId() userId: number,
     @Res({ passthrough: true }) res: Response,
   ): Promise<void> {
-    return this.authService.signOut(userId, res);
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    return this.authService.signOut(userId);
   }
 
   @Public()
@@ -111,6 +117,6 @@ export class AuthController {
     @GetCurrentUserId() userId: number,
     @GetCurrentUser('refreshToken') refreshToken: string,
   ): Promise<void> {
-    await this.authService.refreshTokens(userId, refreshToken);
+    await this.jwtTokenSerice.refreshTokens(userId, refreshToken);
   }
 }
