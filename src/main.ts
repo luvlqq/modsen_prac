@@ -11,6 +11,7 @@ import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 import { setupSwagger } from './common/initializations/';
 import { PrismaClientExceptionFilter } from './modules/prisma/filters';
+import { HttpExceptionFilter } from '@app/src/common/filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -24,7 +25,10 @@ async function bootstrap() {
   setupSwagger(app);
 
   const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+  app.useGlobalFilters(
+    new PrismaClientExceptionFilter(httpAdapter),
+    new HttpExceptionFilter(),
+  );
 
   process.on('SIGINT', async () => {
     Logger.log('Server close by user');
