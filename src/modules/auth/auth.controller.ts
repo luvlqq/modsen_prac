@@ -29,7 +29,7 @@ import { JwtTokensService } from '@app/src/modules/auth/jwt.tokens.service';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly jwtTokenSerice: JwtTokensService,
+    private readonly jwtTokenService: JwtTokensService,
   ) {}
 
   @Public()
@@ -117,6 +117,6 @@ export class AuthController {
     @GetCurrentUserId() userId: number,
     @GetCurrentUser('refreshToken') refreshToken: string,
   ): Promise<void> {
-    await this.jwtTokenSerice.refreshTokens(userId, refreshToken);
+    await this.jwtTokenService.refreshTokens(userId, refreshToken);
   }
 }
